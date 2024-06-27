@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!-- <div class="container"> -->
+
+    <div class="flex-container">
+      <div class="head">
+        <img src="./images/logo.png" alt="" />
+        <div class="right">
+          <h3>Tax Invoice/Bill of Supply/Cash Memo</h3>
+          <p>(Original for Recipient)</p>
+        </div>
+      </div>
+      <div class="grid-container">
+        <div class="items sold-by">
+          <h3><strong>Sold By:</strong></h3>
+          <p><%= seller.name%></p>
+          <p><%= seller.address.building %>,<%= seller.address.street %></p>
+          <% if(seller.address.area !== "") {%>
+          <p><%= seller.address.area %></p>
+          <% } %>
+          <p>
+            <%= seller.address.district %>, <%= seller.address.state %>, <%=
+            seller.address.pincode %>
+          </p>
+        </div>
+        <div class="items billing right">
+          <h3><strong>Billing Address</strong></h3>
+          <p><%= buyer.name%></p>
+          <p><%= buyer.address.building %>,<%= buyer.address.street %></p>
+          <% if(buyer.address.area !== "") {%>
+          <p><%= buyer.address.area %></p>
+          <% } %>
+          <p>
+            <%= buyer.address.district %>, <%= buyer.address.state %>, <%=
+            buyer.address.pincode %>
+          </p>
+          <p><strong>State/UT Code: </strong><%= buyer.address.stateCode %></p>
+        </div>
+        <div class="items">
+          <p><strong>PAN No: </strong><%= seller.pan %></p>
+          <p><strong>GST Registration No: </strong><%= seller.gst %></p>
+        </div>
+        <div class="items"></div>
+        <div class="items"></div>
+        <div class="items right">
+          <h3><strong>Shipping Address</strong></h3>
+          <p><%= buyer.name%></p>
+          <p><%= buyer.address.building %>,<%= buyer.address.street %></p>
+          <% if(buyer.address.area !== "") {%>
+          <p><%= buyer.address.area %></p>
+          <% } %>
+          <p>
+            <%= buyer.address.district %>, <%= buyer.address.state %>, <%=
+            buyer.address.pincode %>
+          </p>
+          <p><strong>State/UT Code: </strong><%= buyer.address.stateCode %></p>
+          <p><strong>Place of Supply: </strong><%= seller.placeOfSupply %></p>
+          <p>
+            <strong>Place of Delivery: </strong><%= buyer.placeOfDelivery %>
+          </p>
+        </div>
+        <div class="items">
+          <p><strong>Order No: </strong> <%= invoice.orderNo %></p>
+          <p><strong>Order Date: </strong><%= invoice.date %></p>
+        </div>
+        <div class="items right">
+          <p><strong>Invoice Number : </strong><%= invoice.num %></p>
+          <p><strong>Invoice Details : </strong><%= invoice.details %></p>
+          <p><strong>Invoice Date : </strong><%= invoice.date %></p>
+        </div>
+      </div>
+      <table>
+        <tr class="gray">
+          <th><strong>SI. No</strong></th>
+          <th><strong>Description</strong></th>
+          <th><strong>Unit Price</strong></th>
+          <th><strong>Qty</strong></th>
+          <th><strong>Net Amount</strong></th>
+          <th><strong>Tax Rate</strong></th>
+          <th><strong>Tax Type</strong></th>
+          <th><strong>Tax Amount</strong></th>
+          <th><strong>Total Amount</strong></th>
+        </tr>
+        <% let count = 1; products.forEach((obj) => { %>
+        <tr class="small-font">
+          <td><%= count %></td>
+          <td><%= obj.productName %></td>
+          <td>₹<%= obj.unitPrice %></td>
+          <td><%= obj.quantity %></td>
+          <td><%= obj.net %></td>
+          <% if('igst' in obj){%>
+          <td>18%</td>
+          <td>IGST</td>
+          <td>₹<%= obj.igst %></td>
+          <% } else {%>
+          <td>
+            <table class="no-border cell-full">
+              <tr>
+                <td class="no-border cell-full">9%</td>
+              </tr>
+              <tr>
+                <td class="no-border cell-full">9%</td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <table class="no-border cell-full">
+              <tr>
+                <td class="no-border cell-full">CGST</td>
+              </tr>
+              <tr>
+                <td class="no-border cell-full">SGST</td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <table class="no-border cell-full">
+              <tr>
+                <td class="no-border cell-full"><%= obj.cgst %></td>
+              </tr>
+              <tr>
+                <td class="no-border cell-full"><%= obj.sgst %></td>
+              </tr>
+            </table>
+          </td>
+          <% } %>
+          <td><%= obj.total %></td>
+        </tr>
+        <% count++; }); %>
+        <tr>
+          <td colspan="7" class="left"><strong>Total:</strong></td>
+          <td class="small-font gray">₹ <%= totalTax %></td>
+          <td class="small-font gray">₹ <%= totalAmount %></td>
+        </tr>
+        <tr>
+          <td colspan="9" class="left">
+            <strong
+              >Amount in Words: <br />
+              <%= inWords %>
+            </strong>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="9" rowspan="1" class="right">
+            <strong>For <%= seller.name %> :</strong><br />
+            <img src="./images/signature.png" class="sign" /><br />
+            <strong>Authorized Signatory</strong>
+          </td>
+        </tr>
+      </table>
+      <p>Whether tax is payable under reverse charge - No</p>
+
+      <!-- </div> -->
+    </div>
+  </body>
+</html>
